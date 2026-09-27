@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Know Yourself — Health & Mind Assessment</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{ padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); }
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:#f8fafc;}
+  .doodle-bg{background-image:radial-gradient(#e0e7ff 1.2px,transparent 1.2px),radial-gradient(#ede9fe 1.2px,#f8fafc 1.2px);background-size:48px 48px;background-position:0 0,24px 24px;}
+  .glass-card{background:rgba(255,255,255,.88);backdrop-filter:blur(12px);border:1px solid rgba(226,232,240,.8);}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+  .float-slow{animation:float 4s ease-in-out infinite}
+  .float-reverse{animation:float 4.5s ease-in-out infinite reverse}
+  @media print{
+    header,footer,.no-print{display:none!important}
+    section{display:block!important}
+    body{background:#fff}
+    .glass-card{box-shadow:none;border:1px solid #ddd}
+  }
+</style>
+</head>
+<body class="doodle-bg text-slate-800 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+<header class="sticky top-0 z-50 glass-card border-b border-slate-200/70 no-print">
+  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-2 cursor-pointer" onclick="showSection('welcome-section')">
+      <span class="text-2xl">✨</span>
+      <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">Know Yourself</span>
+    </div>
+    <nav class="flex items-center gap-1 sm:gap-2">
+      <button onclick="showSection('dashboard-section')" class="text-xs sm:text-sm font-semibold px-2.5 sm:px-4 py-2 rounded-xl text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition">Dashboard</button>
+      <button onclick="startIQTest()" class="text-xs sm:text-sm font-semibold px-2.5 sm:px-4 py-2 rounded-xl text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition">IQ 🧠</button>
+      <button onclick="showSection('health-section')" class="text-xs sm:text-sm font-semibold px-2.5 sm:px-4 py-2 rounded-xl text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition">Health 🩺</button>
+      <button onclick="openReport()" class="text-xs sm:text-sm font-semibold px-2.5 sm:px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-200 transition">Reports 📈</button>
+      <button onclick="shareApp()" class="text-xs sm:text-sm font-semibold px-2.5 sm:px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition flex items-center gap-1">
+        <span>Share</span><span>🔗</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] bg-slate-900 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 no-print">Link copied!</div>
+
+<main class="flex-grow max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+  <!-- WELCOME -->
+  <section id="welcome-section" class="py-12 sm:py-16 text-center relative">
+    <div class="absolute top-2 left-6 text-4xl float-slow opacity-80 select-none">🧠</div>
+    <div class="absolute top-8 right-12 text-4xl float-reverse opacity-80 select-none">💓</div>
+    <div class="absolute bottom-4 left-1/4 text-3xl float-reverse opacity-70 select-none">🏋️</div>
+    <div class="absolute bottom-2 right-1/4 text-3xl float-slow opacity-70 select-none">⏰</div>
+    <div class="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold px-4 py-1.5 rounded-full mb-6 shadow-sm">
+      <span>🌱 Self-Discovery & Wellness Engine</span>
+    </div>
+    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-tight">Know Yourself</h1>
+    <p class="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 mb-8 leading-relaxed">
+      Discover your cognitive potential, physical wellness, and lifestyle balance in one place.
+    </p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <button onclick="showSection('dashboard-section')" class="px-8 py-3.5 bg-indigo-600 text-white font-semibold rounded-2xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:-translate-y-0.5 transition">Get Started 🚀</button>
+      <button onclick="openReport()" class="px-8 py-3.5 glass-card font-semibold rounded-2xl hover:bg-white text-slate-700 border border-slate-200 shadow-sm hover:-translate-y-0.5 transition">View My Reports 📈</button>
+      <button onclick="shareApp()" class="px-8 py-3.5 glass-card font-semibold rounded-2xl hover:bg-white text-slate-700 border border-slate-200 shadow-sm hover:-translate-y-0.5 transition">Share with Friends 🔗</button>
+    </div>
+    <div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+      <div class="glass-card p-4 rounded-2xl"><div class="text-2xl mb-1">🧠</div><div class="font-bold text-slate-800 text-sm">IQ Assessment</div><div class="text-xs text-slate-500">Pattern & logic testing</div></div>
+      <div class="glass-card p-4 rounded-2xl"><div class="text-2xl mb-1">⚖️</div><div class="font-bold text-slate-800 text-sm">Health Index</div><div class="text-xs text-slate-500">BMI & calorie targets</div></div>
+      <div class="glass-card p-4 rounded-2xl"><div class="text-2xl mb-1">⚡</div><div class="font-bold text-slate-800 text-sm">Burnout Index</div><div class="text-xs text-slate-500">Stress & fatigue signals</div></div>
+      <div class="glass-card p-4 rounded-2xl"><div class="text-2xl mb-1">🌙</div><div class="font-bold text-slate-800 text-sm">Sleep Score</div><div class="text-xs text-slate-500">Circadian rhythm balance</div></div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard-section" class="hidden py-8">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Assessments & Predictors 🎯</h2>
+        <p class="text-sm text-slate-500">Select an assessment to calculate your indexes</p>
+      </div>
+      <button onclick="showSection('welcome-section')" class="text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-100">← Home</button>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="glass-card p-6 rounded-2xl hover:shadow-xl transition group flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">🧠</div>
+          <h3 class="text-lg font-bold text-slate-800 mb-1">Cognitive IQ Tester</h3>
+          <p class="text-sm text-slate-500 mb-2 leading-relaxed">A fresh random mix of 4 easy, 4 medium & 2 hard questions every attempt.</p>
+          <p class="text-xs font-semibold text-indigo-600 mb-4">Last score: <span id="dash-iq-score">—</span> <span id="dash-iq-count" class="text-slate-400 font-normal"></span></p>
+        </div>
+        <button onclick="startIQTest()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl transition">Start IQ Test →</button>
+      </div>
+      <div class="glass-card p-6 rounded-2xl hover:shadow-xl transition group flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">🩺</div>
+          <h3 class="text-lg font-bold text-slate-800 mb-1">Health Index & Diet Engine</h3>
+          <p class="text-sm text-slate-500 mb-2 leading-relaxed">BMI, calories, hydration and a tailored diet & routine schedule.</p>
+          <p class="text-xs font-semibold text-emerald-600 mb-4">Last score: <span id="dash-health-score">—</span> <span id="dash-health-count" class="text-slate-400 font-normal"></span></p>
+        </div>
+        <button onclick="showSection('health-section')" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl transition">Check Health Index →</button>
+      </div>
+      <div class="glass-card p-6 rounded-2xl hover:shadow-xl transition group flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">⚡</div>
+          <h3 class="text-lg font-bold text-slate-800 mb-1">Stress & Burnout Index</h3>
+          <p class="text-sm text-slate-500 mb-2 leading-relaxed">Work pressure, fatigue and digital strain rolled into a burnout risk score.</p>
+          <p class="text-xs font-semibold text-amber-600 mb-4">Last score: <span id="dash-stress-score">—</span> <span id="dash-stress-count" class="text-slate-400 font-normal"></span></p>
+        </div>
+        <button onclick="showSection('stress-section')" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-medium text-sm rounded-xl transition">Test Burnout Risk →</button>
+      </div>
+      <div class="glass-card p-6 rounded-2xl hover:shadow-xl transition group flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">🌙</div>
+          <h3 class="text-lg font-bold text-slate-800 mb-1">Sleep & Recovery Score</h3>
+          <p class="text-sm text-slate-500 mb-2 leading-relaxed">Bedtime consistency, caffeine and screen habits mapped to a recovery score.</p>
+          <p class="text-xs font-semibold text-purple-600 mb-4">Last score: <span id="dash-sleep-score">—</span> <span id="dash-sleep-count" class="text-slate-400 font-normal"></span></p>
+        </div>
+        <button onclick="showSection('sleep-section')" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-medium text-sm rounded-xl transition">Calculate Sleep Score →</button>
+      </div>
+      <div class="glass-card p-6 rounded-2xl hover:shadow-xl transition group flex flex-col justify-between border-2 border-indigo-200">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">📈</div>
+          <h3 class="text-lg font-bold text-slate-800 mb-1">My Reports</h3>
+          <p class="text-sm text-slate-500 mb-2 leading-relaxed">Compare every attempt, before vs after, across all four assessments.</p>
+          <p class="text-xs font-semibold text-slate-500 mb-4">All your saved history in one place</p>
+        </div>
+        <button onclick="openReport()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-medium text-sm rounded-xl transition">View Reports →</button>
+      </div>
+      <div class="glass-card p-6 rounded-2xl border-dashed border-2 border-slate-200 relative flex flex-col justify-between opacity-80">
+        <div class="absolute top-3 right-3 bg-indigo-100 text-indigo-700 text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full">Coming Soon ⏳</div>
+        <div><div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl mb-4">🎭</div>
+          <h3 class="text-lg font-bold text-slate-700 mb-1">Emotional Intelligence (EQ)</h3>
+          <p class="text-sm text-slate-400 mb-4">Empathy quotient, conflict response and social resilience index.</p></div>
+        <button disabled class="w-full py-2.5 bg-slate-200 text-slate-400 font-medium text-sm rounded-xl cursor-not-allowed">In Development</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- IQ TEST -->
+  <section id="iq-section" class="hidden max-w-2xl mx-auto py-8">
+    <div class="glass-card p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-200">
+      <div class="flex items-center justify-between mb-4">
+        <span id="iq-difficulty-badge" class="px-3 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-700">Easy</span>
+        <span class="flex items-center gap-3 text-sm font-semibold text-slate-500">
+          <span id="iq-timer">⏱ 0:00</span><span id="iq-step-label">Question 1 of 10</span>
+        </span>
+      </div>
+      <div class="w-full bg-slate-100 h-2.5 rounded-full mb-6 overflow-hidden">
+        <div id="iq-progress-bar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width:10%"></div>
+      </div>
+      <h3 id="iq-question-text" class="text-lg sm:text-xl font-bold text-slate-900 leading-snug mb-6">Question loading...</h3>
+      <div id="iq-options-container" class="space-y-3 mb-6"></div>
+      <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+        <button onclick="cancelIQTest()" class="text-sm font-medium text-slate-500 hover:text-slate-800">Cancel & Exit</button>
+        <button id="iq-next-btn" onclick="nextIQQuestion()" disabled class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm rounded-xl transition">Continue →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- IQ RESULT -->
+  <section id="iq-result-section" class="hidden max-w-2xl mx-auto py-8 text-center">
+    <div class="glass-card p-8 sm:p-10 rounded-3xl shadow-2xl border border-slate-200">
+      <div class="text-5xl mb-4">🏆</div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">Cognitive Assessment Completed</h2>
+      <p class="text-sm text-slate-500 mb-6">Calibrated intelligence quotient estimate</p>
+      <div class="inline-block p-6 rounded-3xl bg-gradient-to-tr from-indigo-50 to-purple-50 border border-indigo-100 mb-6">
+        <div class="text-xs uppercase tracking-widest text-indigo-600 font-bold mb-1">Estimated IQ Score</div>
+        <div id="iq-score-display" class="text-5xl font-black text-indigo-700">—</div>
+        <div id="iq-tier-display" class="text-sm font-semibold text-slate-600 mt-1"></div>
+      </div>
+      <div id="iq-vs-previous" class="text-sm font-semibold mb-6"></div>
+      <div class="grid grid-cols-3 gap-3 text-left mb-6">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100"><div class="text-xs text-slate-400 font-medium">Accuracy</div><div id="iq-accuracy-stat" class="text-base font-bold text-slate-800"></div></div>
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100"><div class="text-xs text-slate-400 font-medium">Percentile</div><div id="iq-percentile-stat" class="text-base font-bold text-slate-800"></div></div>
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100"><div class="text-xs text-slate-400 font-medium">Time Taken</div><div id="iq-time-stat" class="text-base font-bold text-slate-800"></div></div>
+      </div>
+      <div class="text-left mb-6">
+        <div class="text-xs font-bold text-slate-500 uppercase mb-2">Strength Breakdown</div>
+        <div id="iq-breakdown" class="space-y-2"></div>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center no-print">
+        <button onclick="startIQTest()" class="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-xl transition">Retake Test 🔄</button>
+        <button onclick="openReport('iq')" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-medium text-sm rounded-xl transition">Compare Reports 📈</button>
+        <button onclick="showSection('dashboard-section')" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl transition">Dashboard 🏠</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- HEALTH FORM -->
+  <section id="health-section" class="hidden max-w-3xl mx-auto py-8">
+    <div class="glass-card p-6 sm:p-10 rounded-3xl shadow-xl border border-slate-200">
+      <div class="text-center max-w-md mx-auto mb-8">
+        <span class="text-3xl">🩺</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-2">Health & Lifestyle Check</h2>
+        <p class="text-sm text-slate-500 mt-1">Fill in your metrics for a tailored wellness & diet strategy</p>
+      </div>
+      <form id="health-form" onsubmit="calculateHealthReport(event)" class="space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Age (Years)</label>
+            <input required type="number" id="h-age" min="10" max="110" placeholder="e.g. 24" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white" /></div>
+          <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Gender</label>
+            <select id="h-gender" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+              <option value="male">Male 👨</option><option value="female">Female 👩</option><option value="other">Other / Non-Binary 🧑</option></select></div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Height (cm)</label>
+            <input required type="number" id="h-height" min="80" max="250" placeholder="e.g. 175" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white" /></div>
+          <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Weight (kg)</label>
+            <input required type="number" id="h-weight" min="30" max="250" step="0.5" placeholder="e.g. 68" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white" /></div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Daily Screen Time (hrs)</label>
+            <input required type="number" id="h-screen" min="1" max="24" step="0.5" placeholder="e.g. 8" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white" /></div>
+          <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Water Intake (L)</label>
+            <input required type="number" id="h-water" min="0.5" max="8" step="0.1" placeholder="e.g. 2.5" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white" /></div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Physical Activity Level</label>
+            <select id="h-activity" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+              <option value="sedentary">Sedentary (little/no exercise)</option><option value="light">Lightly Active (1-3 d/wk)</option>
+              <option value="moderate" selected>Moderately Active (3-5 d/wk)</option><option value="active">Very Active (6-7 d/wk)</option></select></div>
+          <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Average Sleep (hrs)</label>
+            <input required type="number" id="h-sleep" min="3" max="14" step="0.5" placeholder="e.g. 7" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white" /></div>
+        </div>
+        <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Primary Goal or Current Concern</label>
+          <select id="h-goal" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+            <option value="weight_loss">Weight Loss & Lean Muscle 🏃</option><option value="energy">Boost Energy & Fix Fatigue ⚡</option>
+            <option value="posture">Reduce Eye/Back Strain from Screens 💻</option><option value="maintain">Maintain Vitality & Heart Health ❤️</option></select></div>
+        <div class="flex items-center justify-between pt-4">
+          <button type="button" onclick="showSection('dashboard-section')" class="text-sm font-semibold text-slate-500 hover:text-slate-800">Cancel</button>
+          <button type="submit" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl shadow-lg shadow-emerald-200 transition">Generate Health Report 📊</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- HEALTH RESULT -->
+  <section id="health-result-section" class="hidden max-w-4xl mx-auto py-8 space-y-6">
+    <div class="glass-card p-6 sm:p-8 rounded-3xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div>
+        <span class="text-xs font-bold tracking-widest text-emerald-600 uppercase">Analysis Complete</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Your Personalized Health Dossier 📋</h2>
+        <p class="text-sm text-slate-500 mt-1">Calculated from biometrics, screen load & metabolic baselines.</p>
+        <p id="health-vs-previous" class="text-sm font-semibold mt-2"></p>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="text-center p-3 bg-emerald-50 rounded-2xl border border-emerald-100"><div class="text-[10px] font-bold text-emerald-600 uppercase">Health Score</div><div id="r-health-index" class="text-2xl font-black text-emerald-700">—</div></div>
+        <div class="text-center p-3 bg-indigo-50 rounded-2xl border border-indigo-100"><div class="text-[10px] font-bold text-indigo-600 uppercase">BMI</div><div id="r-bmi" class="text-2xl font-black text-indigo-700">—</div><div id="r-bmi-status" class="text-[10px] font-bold text-indigo-600"></div></div>
+        <div class="text-center p-3 bg-amber-50 rounded-2xl border border-amber-100"><div class="text-[10px] font-bold text-amber-600 uppercase">Calories/day</div><div id="r-calories" class="text-2xl font-black text-amber-700">—</div></div>
+        <div class="text-center p-3 bg-sky-50 rounded-2xl border border-sky-100"><div class="text-[10px] font-bold text-sky-600 uppercase">Water/day</div><div id="r-water-target" class="text-2xl font-black text-sky-700">—</div></div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="glass-card p-6 rounded-3xl border border-slate-200">
+        <h3 class="text-lg font-bold text-slate-950 flex items-center gap-2 mb-4"><span>🥗</span> Recommended Diet Plan</h3>
+        <div id="diet-recommendations" class="space-y-3 text-sm text-slate-600"></div>
+      </div>
+      <div class="glass-card p-6 rounded-3xl border border-slate-200">
+        <h3 class="text-lg font-bold text-slate-950 flex items-center gap-2 mb-4"><span>⏰</span> Optimized Daily Schedule</h3>
+        <div id="schedule-recommendations" class="space-y-3 text-sm text-slate-600"></div>
+      </div>
+    </div>
+    <div class="glass-card p-6 rounded-3xl border border-slate-200">
+      <h3 class="text-lg font-bold text-slate-950 flex items-center gap-2 mb-3"><span>💡</span> Risk Mitigation Tips</h3>
+      <div id="screentime-advice" class="text-sm text-slate-600 leading-relaxed space-y-2"></div>
+    </div>
+    <div class="flex justify-center gap-4 pt-4 no-print">
+      <button onclick="showSection('health-section')" class="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-xl transition">Edit Biometrics ✏️</button>
+      <button onclick="openReport('health')" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-medium text-sm rounded-xl transition">Compare Reports 📈</button>
+      <button onclick="showSection('dashboard-section')" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl transition">Dashboard 🏠</button>
+    </div>
+  </section>
+
+  <!-- STRESS FORM -->
+  <section id="stress-section" class="hidden max-w-xl mx-auto py-8">
+    <div class="glass-card p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-200">
+      <div class="text-center mb-6"><span class="text-3xl">⚡</span><h2 class="text-2xl font-bold text-slate-900 mt-2">Stress & Burnout Check</h2>
+      <p class="text-sm text-slate-500 mt-1">A quick pulse-check on work pressure & fatigue</p></div>
+      <form onsubmit="calculateStress(event)" class="space-y-5">
+        <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Work Hours / Day</label>
+          <input required type="number" id="s-hours" min="1" max="18" placeholder="e.g. 9" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white" /></div>
+        <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Work Pressure (1 calm – 10 intense)</label>
+          <input type="range" id="s-pressure" min="1" max="10" value="5" class="w-full accent-amber-500" oninput="document.getElementById('s-pressure-val').innerText=this.value">
+          <div class="text-right text-xs font-semibold text-amber-600" id="s-pressure-val">5</div></div>
+        <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">How often do you feel fatigued?</label>
+          <select id="s-fatigue" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
+            <option value="rarely">Rarely</option><option value="sometimes" selected>Sometimes</option><option value="often">Often</option><option value="constantly">Constantly</option></select></div>
+        <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Digital breaks during work?</label>
+          <select id="s-breaks" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
+            <option value="regular">Regular short breaks</option><option value="few" selected>A few breaks</option><option value="none">Almost none</option></select></div>
+        <div class="flex items-center justify-between pt-2">
+          <button type="button" onclick="showSection('dashboard-section')" class="text-sm font-semibold text-slate-500 hover:text-slate-800">Cancel</button>
+          <button type="submit" class="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl shadow-lg shadow-amber-200 transition">Calculate Burnout Risk ⚡</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- STRESS RESULT -->
+  <section id="stress-result-section" class="hidden max-w-xl mx-auto py-8 text-center">
+    <div class="glass-card p-8 rounded-3xl shadow-xl border border-slate-200">
+      <div class="text-5xl mb-4">⚡</div>
+      <h2 class="text-2xl font-extrabold text-slate-900 mb-4">Your Burnout Risk</h2>
+      <div class="inline-block p-6 rounded-3xl bg-gradient-to-tr from-amber-50 to-orange-50 border border-amber-100 mb-6">
+        <div id="stress-score-display" class="text-5xl font-black text-amber-700">—</div>
+        <div id="stress-tier-display" class="text-sm font-semibold text-slate-600 mt-1"></div>
+      </div>
+      <div id="stress-vs-previous" class="text-sm font-semibold mb-4"></div>
+      <div id="stress-tips" class="text-left text-sm text-slate-600 space-y-2 mb-6"></div>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center no-print">
+        <button onclick="showSection('stress-section')" class="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-xl transition">Retake 🔄</button>
+        <button onclick="openReport('stress')" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-medium text-sm rounded-xl transition">Compare Reports 📈</button>
+        <button onclick="showSection('dashboard-section')" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl transition">Dashboard 🏠</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLEEP FORM -->
+  <section id="sleep-section" class="hidden max-w-xl mx-auto py-8">
+    <div class="glass-card p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-200">
+      <div class="text-center mb-6"><span class="text-3xl">🌙</span><h2 class="text-2xl font-bold text-slate-900 mt-2">Sleep & Recovery Check</h2>
+      <p class="text-sm text-slate-500 mt-1">Circadian habits shape restorative sleep</p></div>
+      <form onsubmit="calculateSleep(event)" class="space-y-5">
+        <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Bedtime consistency</label>
+          <select id="sl-consistency" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white">
+            <option value="consistent">Consistent (±30 min nightly)</option><option value="somewhat" selected>Somewhat variable</option><option value="irregular">Very irregular</option></select></div>
+        <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Caffeine (cups/day)</label>
+          <input required type="number" id="sl-caffeine" min="0" max="10" placeholder="e.g. 2" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white" /></div>
+        <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Screen use before bed</label>
+          <select id="sl-screen" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white">
+            <option value="none">None</option><option value="short" selected>Under 30 min</option><option value="medium">30-60 min</option><option value="long">Over 60 min</option></select></div>
+        <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Morning feeling</label>
+          <select id="sl-morning" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white">
+            <option value="refreshed">Refreshed</option><option value="okay" selected>Okay</option><option value="tired">Tired</option><option value="exhausted">Exhausted</option></select></div>
+        <div class="flex items-center justify-between pt-2">
+          <button type="button" onclick="showSection('dashboard-section')" class="text-sm font-semibold text-slate-500 hover:text-slate-800">Cancel</button>
+          <button type="submit" class="px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl shadow-lg shadow-purple-200 transition">Calculate Sleep Score 🌙</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- SLEEP RESULT -->
+  <section id="sleep-result-section" class="hidden max-w-xl mx-auto py-8 text-center">
+    <div class="glass-card p-8 rounded-3xl shadow-xl border border-slate-200">
+      <div class="text-5xl mb-4">🌙</div>
+      <h2 class="text-2xl font-extrabold text-slate-900 mb-4">Your Sleep & Recovery Score</h2>
+      <div class="inline-block p-6 rounded-3xl bg-gradient-to-tr from-purple-50 to-indigo-50 border border-purple-100 mb-6">
+        <div id="sleep-score-display" class="text-5xl font-black text-purple-700">—</div>
+        <div id="sleep-tier-display" class="text-sm font-semibold text-slate-600 mt-1"></div>
+      </div>
+      <div id="sleep-vs-previous" class="text-sm font-semibold mb-4"></div>
+      <div id="sleep-tips" class="text-left text-sm text-slate-600 space-y-2 mb-6"></div>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center no-print">
+        <button onclick="showSection('sleep-section')" class="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-xl transition">Retake 🔄</button>
+        <button onclick="openReport('sleep')" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-medium text-sm rounded-xl transition">Compare Reports 📈</button>
+        <button onclick="showSection('dashboard-section')" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl transition">Dashboard 🏠</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- REPORT SECTION -->
+  <section id="report-section" class="hidden max-w-4xl mx-auto py-8">
+    <div class="glass-card p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-200">
+      <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">My Reports 📈</h2>
+          <p class="text-sm text-slate-500">Every attempt, saved automatically — compare your before & after</p>
+        </div>
+        <button onclick="showSection('dashboard-section')" class="text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 no-print">← Dashboard</button>
+      </div>
+      <div class="flex flex-wrap gap-2 mb-6 no-print" id="report-tabs"></div>
+      <div id="report-body"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="glass-card border-t border-slate-200/70 py-6 text-center text-xs text-slate-400 mt-auto no-print">
+  <p>© 2026 Know Yourself • Built for self-discovery & health balance. (Informational tool, not clinical diagnosis)</p>
+</footer>
+
+<script>
+const sections = ['welcome-section','dashboard-section','iq-section','iq-result-section','health-section','health-result-section','stress-section','stress-result-section','sleep-section','sleep-result-section','report-section'];
+function showSection(id){
+  sections.forEach(s=>{const el=document.getElementById(s); if(el) el.classList.add('hidden');});
+  const active=document.getElementById(id);
+  if(active) active.classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='dashboard-section') loadDashboardStats();
+}
+
+/* ---------- history storage ---------- */
+function loadHistory(type){
+  try{ return JSON.parse(localStorage.getItem('ky_hist_'+type)) || []; }catch(e){ return []; }
+}
+function saveHistory(type,entry){
+  const hist=loadHistory(type);
+  hist.push(entry);
+  if(hist.length>30) hist.shift();
+  try{ localStorage.setItem('ky_hist_'+type, JSON.stringify(hist)); }catch(e){}
+}
+function clearHistory(type){
+  if(!confirm('Clear all saved history for this report? This cannot be undone.')) return;
+  try{ localStorage.removeItem('ky_hist_'+type); }catch(e){}
+  renderReport(type);
+}
+function nowLabel(){
+  const d=new Date();
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})+' '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+function loadDashboardStats(){
+  const cfgs={iq:{el:'dash-iq-score',cnt:'dash-iq-count',fmt:e=>e.iq},
+    health:{el:'dash-health-score',cnt:'dash-health-count',fmt:e=>e.score+'/100'},
+    stress:{el:'dash-stress-score',cnt:'dash-stress-count',fmt:e=>e.score+'/100'},
+    sleep:{el:'dash-sleep-score',cnt:'dash-sleep-count',fmt:e=>e.score+'/100'}};
+  Object.keys(cfgs).forEach(type=>{
+    const hist=loadHistory(type); const c=cfgs[type];
+    document.getElementById(c.el).innerText = hist.length ? c.fmt(hist[hist.length-1]) : '—';
+    document.getElementById(c.cnt).innerText = hist.length ? `(${hist.length} attempt${hist.length>1?'s':''})` : '';
+  });
+}
+
+/* ---------- report rendering ---------- */
+const reportConfig={
+  iq:{name:'IQ Test',emoji:'🧠',color:'indigo',higherBetter:true,getScore:e=>e.iq,unit:'',extra:e=>`Accuracy ${e.accuracy} · ${e.tier}`},
+  health:{name:'Health Index',emoji:'🩺',color:'emerald',higherBetter:true,getScore:e=>e.score,unit:'/100',extra:e=>`BMI ${e.bmi} (${e.bmiStatus}) · ${e.calories} kcal target`},
+  stress:{name:'Stress & Burnout',emoji:'⚡',color:'amber',higherBetter:false,getScore:e=>e.score,unit:'/100',extra:e=>e.tier},
+  sleep:{name:'Sleep & Recovery',emoji:'🌙',color:'purple',higherBetter:true,getScore:e=>e.score,unit:'/100',extra:e=>e.tier}
+};
+let currentReportType='iq';
+function openReport(type){
+  currentReportType = type || currentReportType || 'iq';
+  showSection('report-section');
+  renderReportTabs();
+  renderReport(currentReportType);
+}
+function renderReportTabs(){
+  const tabs=document.getElementById('report-tabs');
+  tabs.innerHTML='';
+  Object.keys(reportConfig).forEach(type=>{
+    const cfg=reportConfig[type];
+    const active = type===currentReportType;
+    const btn=document.createElement('button');
+    btn.className = active
+      ? `px-4 py-2 rounded-xl text-sm font-semibold bg-${cfg.color}-600 text-white shadow-md`
+      : `px-4 py-2 rounded-xl text-sm font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200`;
+    btn.innerText = `${cfg.emoji} ${cfg.name}`;
+    btn.onclick = ()=>{ currentReportType=type; renderReportTabs(); renderReport(type); };
+    tabs.appendChild(btn);
+  });
+}
+function renderReport(type){
+  const cfg=reportConfig[type];
+  const hist=loadHistory(type);
+  const body=document.getElementById('report-body');
+  if(!hist.length){
+    body.innerHTML=`<div class="text-center py-12 text-slate-400">
+      <div class="text-4xl mb-3">${cfg.emoji}</div>
+      <p class="font-semibold text-slate-500">No attempts recorded yet for ${cfg.name}.</p>
+      <p class="text-sm mt-1">Complete this assessment once to start tracking your progress here.</p>
+    </div>`;
+    return;
+  }
+  const scores=hist.map(cfg.getScore);
+  const maxScore=Math.max(...scores,1);
+  const best = cfg.higherBetter ? Math.max(...scores) : Math.min(...scores);
+  const latest=scores[scores.length-1];
+  const first=scores[0];
+  const diff = latest-first;
+  const improved = cfg.higherBetter ? diff>0 : diff<0;
+  const changeLabel = hist.length>1
+    ? `<span class="${improved?'text-emerald-600':(diff===0?'text-slate-500':'text-rose-600')}">${diff>0?'+':''}${diff}${cfg.unit} since your first attempt</span>`
+    : `<span class="text-slate-400">Take this test again to start comparing</span>`;
+
+  let bars='';
+  hist.forEach((e,i)=>{
+    const val=cfg.getScore(e);
+    const pct=Math.round((val/maxScore)*100);
+    const prev = i>0 ? cfg.getScore(hist[i-1]) : null;
+    let deltaTag='';
+    if(prev!==null){
+      const d=val-prev;
+      const good = cfg.higherBetter ? d>0 : d<0;
+      if(d!==0) deltaTag = `<span class="text-xs font-semibold ml-2 ${good?'text-emerald-600':'text-rose-600'}">${d>0?'+':''}${d}${cfg.unit}</span>`;
+      else deltaTag = `<span class="text-xs font-semibold ml-2 text-slate-400">no change</span>`;
+    }
+    bars+=`<div class="mb-3">
+      <div class="flex justify-between items-baseline text-xs font-semibold text-slate-600 mb-1">
+        <span>Attempt ${i+1} · ${e.date}</span>
+        <span class="text-slate-800">${val}${cfg.unit}${deltaTag}</span>
+      </div>
+      <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+        <div class="bg-${cfg.color}-500 h-3 rounded-full transition-all duration-500" style="width:${pct}%"></div>
+      </div>
+      <div class="text-[11px] text-slate-400 mt-1">${cfg.extra(e)}</div>
+    </div>`;
+  });
+
+  body.innerHTML=`
+    <div class="grid grid-cols-3 gap-3 mb-6">
+      <div class="text-center p-3 bg-${cfg.color}-50 rounded-2xl border border-${cfg.color}-100"><div class="text-[10px] font-bold text-${cfg.color}-600 uppercase">Attempts</div><div class="text-xl font-black text-${cfg.color}-700">${hist.length}</div></div>
+      <div class="text-center p-3 bg-${cfg.color}-50 rounded-2xl border border-${cfg.color}-100"><div class="text-[10px] font-bold text-${cfg.color}-600 uppercase">Best</div><div class="text-xl font-black text-${cfg.color}-700">${best}${cfg.unit}</div></div>
+      <div class="text-center p-3 bg-${cfg.color}-50 rounded-2xl border border-${cfg.color}-100"><div class="text-[10px] font-bold text-${cfg.color}-600 uppercase">Latest</div><div class="text-xl font-black text-${cfg.color}-700">${latest}${cfg.unit}</div></div>
+    </div>
+    <div class="text-sm font-semibold mb-6">${changeLabel}</div>
+    <div class="mb-4">${bars}</div>
+    <div class="flex justify-end no-print"><button onclick="clearHistory('${type}')" class="text-xs font-semibold text-rose-500 hover:text-rose-700">Clear this history</button></div>
+  `;
+}
+
+/* ---------- IQ question banks (10 easy / 10 medium / 10 hard) ---------- */
+const iqBank={
+  Easy:[
+    {cat:'Verbal',question:"Which word does NOT belong: Apple, Banana, Carrot, Grape?",options:["Apple","Banana","Carrot","Grape"],correct:2},
+    {cat:'Pattern',question:"Complete the sequence: 2, 4, 6, 8, __?",options:["9","10","12","14"],correct:1},
+    {cat:'Verbal',question:"Book is to Reading as Fork is to:",options:["Writing","Drinking","Eating","Cooking"],correct:2},
+    {cat:'Logic',question:"If all Bloops are Razzies and all Razzies are Lizzies, are all Bloops definitely Lizzies?",options:["Yes","No","Cannot be determined"],correct:0},
+    {cat:'Numerical',question:"Which number is the odd one out: 3, 6, 9, 10, 12?",options:["3","6","9","10"],correct:3},
+    {cat:'Verbal',question:"Cat is to Kitten as Dog is to:",options:["Puppy","Cub","Calf","Foal"],correct:0},
+    {cat:'Pattern',question:"Complete the sequence: 1, 1, 2, 3, 5, __?",options:["6","7","8","9"],correct:2},
+    {cat:'Numerical',question:"If a=1, b=2, c=3 ... what is the sum of the letters in 'cab'?",options:["5","6","7","8"],correct:1},
+    {cat:'Pattern',question:"Which shape completes the pattern: Circle, Square, Circle, Square, __?",options:["Circle","Square","Triangle","Star"],correct:0},
+    {cat:'Logic',question:"All cats are mammals. Some mammals are black. Can we conclude some cats are black?",options:["Yes","No","Cannot be determined"],correct:2}
+  ],
+  Medium:[
+    {cat:'Pattern',question:"Find the missing number: 3, 6, 12, 24, __, 96?",options:["36","40","48","52"],correct:2},
+    {cat:'Logic',question:"A bat and ball cost $1.10 total. The bat costs $1.00 more than the ball. How much is the ball?",options:["$0.10","$0.05","$0.15","$0.01"],correct:1},
+    {cat:'Numerical',question:"Which number replaces the question mark? [8→64], [5→25], [9→?]",options:["72","81","90","18"],correct:1},
+    {cat:'Verbal',question:"Rearrange 'RAPIS' to form a world capital.",options:["Rome","Paris","Prague","Tokyo"],correct:1},
+    {cat:'Logic',question:"A farmer has 17 sheep, all but 9 die. How many are left?",options:["8","9","17","0"],correct:1},
+    {cat:'Verbal',question:"Which word means the same as 'Ephemeral'?",options:["Permanent","Fleeting","Ancient","Solid"],correct:1},
+    {cat:'Pattern',question:"Next in sequence: 1, 4, 9, 16, 25, __?",options:["30","36","42","49"],correct:1},
+    {cat:'Numerical',question:"If CAT = C+A+T = 3+1+20 = 24, what is DOG (D=4, O=15, G=7)?",options:["24","25","26","27"],correct:2},
+    {cat:'Verbal',question:"Which word is the opposite of 'Benevolent'?",options:["Kind","Malevolent","Generous","Caring"],correct:1},
+    {cat:'Logic',question:"Three boxes labeled Apples, Oranges and Mixed are ALL labeled wrong. You pick one fruit from the box labeled 'Mixed' and get an apple. What is really in the box labeled 'Apples'?",options:["Apples","Oranges","Mixed","Cannot be determined"],correct:1}
+  ],
+  Hard:[
+    {cat:'Pattern',question:"Look at the pattern: 2, 3, 5, 9, 17, 33, __? What comes next?",options:["49","57","65","71"],correct:2},
+    {cat:'Logic',question:"If 5 machines take 5 minutes to make 5 widgets, how many minutes would 100 machines take to make 100 widgets?",options:["100 minutes","50 minutes","20 minutes","5 minutes"],correct:3},
+    {cat:'Numerical',question:"A clock shows 3:15. What is the angle between the hour and minute hands?",options:["0°","7.5°","15°","30°"],correct:1},
+    {cat:'Verbal',question:"Ocean is to Water as Desert is to:",options:["Cactus","Sand","Heat","Oasis"],correct:1},
+    {cat:'Logic',question:"In a race you overtake the person in 2nd place. What position are you in now?",options:["1st","2nd","3rd","Tie"],correct:1},
+    {cat:'Pattern',question:"Next number: 4, 9, 25, 49, 121, __? (hint: squares of prime numbers)",options:["144","150","169","180"],correct:2},
+    {cat:'Verbal',question:"Rearranging 'CIFAIPC' gives the name of an ocean. Which one?",options:["Atlantic","Pacific","Arctic","Indian"],correct:1},
+    {cat:'Logic',question:"A is the father of B, but B is not the son of A. How is B related to A?",options:["Daughter","Nephew","Cousin","Cannot be determined"],correct:0},
+    {cat:'Numerical',question:"What comes next: 7, 26, 63, 124, 215, __? (hint: n³ − 1)",options:["322","342","362","382"],correct:1},
+    {cat:'Logic',question:"Five people can paint 5 fences in 5 days. How many days would 10 people take to paint 10 fences?",options:["10 days","5 days","2.5 days","20 days"],correct:1}
+  ]
+};
+const tierMeta={Easy:{points:8},Medium:{points:11},Hard:{points:17}};
+function shuffleArr(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function pickN(arr,n){ return shuffleArr(arr).slice(0,n); }
+function buildIQQuestionSet(){
+  const easy=pickN(iqBank.Easy,4).map(q=>({...q,difficulty:'Easy',points:tierMeta.Easy.points}));
+  const medium=pickN(iqBank.Medium,4).map(q=>({...q,difficulty:'Medium',points:tierMeta.Medium.points}));
+  const hard=pickN(iqBank.Hard,2).map(q=>({...q,difficulty:'Hard',points:tierMeta.Hard.points}));
+  return [...easy,...medium,...hard];
+}
+
+let iqQuestions=[],currentQIndex=0,userScore=0,selectedOptionIndex=null,correctCount=0,catStats={},iqTimerInterval=null,iqStartTime=null;
+
+function startIQTest(){
+  iqQuestions=buildIQQuestionSet();
+  currentQIndex=0; userScore=0; correctCount=0; selectedOptionIndex=null;
+  catStats={Verbal:{c:0,t:0},Pattern:{c:0,t:0},Logic:{c:0,t:0},Numerical:{c:0,t:0}};
+  iqStartTime=Date.now();
+  clearInterval(iqTimerInterval);
+  iqTimerInterval=setInterval(updateIQTimer,1000);
+  showSection('iq-section');
+  renderIQQuestion();
+}
+function cancelIQTest(){ clearInterval(iqTimerInterval); showSection('dashboard-section'); }
+function updateIQTimer(){
+  const secs=Math.floor((Date.now()-iqStartTime)/1000);
+  document.getElementById('iq-timer').innerText=`⏱ ${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}`;
+}
+function renderIQQuestion(){
+  const q=iqQuestions[currentQIndex];
+  document.getElementById('iq-step-label').innerText=`Question ${currentQIndex+1} of ${iqQuestions.length}`;
+  document.getElementById('iq-progress-bar').style.width=`${((currentQIndex+1)/iqQuestions.length)*100}%`;
+  const badge=document.getElementById('iq-difficulty-badge');
+  badge.innerText=q.difficulty;
+  badge.className = q.difficulty==='Easy' ? "px-3 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-700"
+    : q.difficulty==='Medium' ? "px-3 py-1 text-xs font-bold rounded-full bg-amber-100 text-amber-700"
+    : "px-3 py-1 text-xs font-bold rounded-full bg-rose-100 text-rose-700";
+  document.getElementById('iq-question-text').innerText=q.question;
+  const container=document.getElementById('iq-options-container');
+  container.innerHTML='';
+  selectedOptionIndex=null;
+  document.getElementById('iq-next-btn').disabled=true;
+  q.options.forEach((opt,idx)=>{
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 transition font-medium text-slate-700 text-sm flex items-center justify-between';
+    btn.innerHTML=`<span>${opt}</span><span class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-xs"></span>`;
+    btn.onclick=()=>selectOption(idx,btn);
+    container.appendChild(btn);
+  });
+}
+function selectOption(index,buttonElement){
+  selectedOptionIndex=index;
+  document.getElementById('iq-options-container').querySelectorAll('button').forEach(b=>{
+    b.className='w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 transition font-medium text-slate-700 text-sm flex items-center justify-between';
+    b.lastElementChild.className='w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-xs';
+    b.lastElementChild.innerHTML='';
+  });
+  buttonElement.className='w-full text-left p-3.5 rounded-xl border-2 border-indigo-600 bg-indigo-50 transition font-semibold text-indigo-900 text-sm flex items-center justify-between shadow-sm';
+  buttonElement.lastElementChild.className='w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs';
+  buttonElement.lastElementChild.innerHTML='✓';
+  document.getElementById('iq-next-btn').disabled=false;
+}
+function nextIQQuestion(){
+  const q=iqQuestions[currentQIndex];
+  catStats[q.cat].t++;
+  if(selectedOptionIndex===q.correct){ userScore+=q.points; correctCount++; catStats[q.cat].c++; }
+  currentQIndex++;
+  if(currentQIndex<iqQuestions.length) renderIQQuestion(); else finishIQTest();
+}
+function finishIQTest(){
+  clearInterval(iqTimerInterval);
+  const totalSecs=Math.floor((Date.now()-iqStartTime)/1000);
+  const estimatedIQ=Math.round(75+(userScore*0.65));
+  document.getElementById('iq-score-display').innerText=estimatedIQ;
+  document.getElementById('iq-accuracy-stat').innerText=`${correctCount} / ${iqQuestions.length}`;
+  document.getElementById('iq-time-stat').innerText=`${Math.floor(totalSecs/60)}:${String(totalSecs%60).padStart(2,'0')}`;
+  let tier="Average Intelligence", percentile="Top 50%";
+  if(estimatedIQ>=130){tier="Very Superior 🌟"; percentile="Top 2%";}
+  else if(estimatedIQ>=120){tier="Superior Cognitive Range 🚀"; percentile="Top 9%";}
+  else if(estimatedIQ>=110){tier="High Average 💡"; percentile="Top 25%";}
+  else if(estimatedIQ<90){tier="Developing Analytical Range 📈"; percentile="Baseline Zone";}
+  document.getElementById('iq-tier-display').innerText=tier;
+  document.getElementById('iq-percentile-stat').innerText=percentile;
+  const breakdown=document.getElementById('iq-breakdown');
+  breakdown.innerHTML='';
+  Object.keys(catStats).forEach(cat=>{
+    const s=catStats[cat]; if(!s.t) return;
+    const pct = Math.round((s.c/s.t)*100);
+    breakdown.innerHTML+=`<div><div class="flex justify-between text-xs font-semibold text-slate-600 mb-1"><span>${cat}</span><span>${s.c}/${s.t}</span></div>
+      <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden"><div class="bg-indigo-500 h-2 rounded-full" style="width:${pct}%"></div></div></div>`;
+  });
+
+  const prevHist=loadHistory('iq');
+  const vsPrev=document.getElementById('iq-vs-previous');
+  if(prevHist.length){
+    const diff=estimatedIQ-prevHist[prevHist.length-1].iq;
+    vsPrev.innerHTML = diff===0 ? `<span class="text-slate-500">Same as your last attempt</span>`
+      : `<span class="${diff>0?'text-emerald-600':'text-rose-600'}">${diff>0?'▲':'▼'} ${Math.abs(diff)} points vs your last attempt</span>`;
+  } else { vsPrev.innerHTML=''; }
+
+  saveHistory('iq',{date:nowLabel(),iq:estimatedIQ,accuracy:`${correctCount}/${iqQuestions.length}`,tier,percentile,timeTaken:`${Math.floor(totalSecs/60)}:${String(totalSecs%60).padStart(2,'0')}`});
+  showSection('iq-result-section');
+}
+
+/* ---------- HEALTH ---------- */
+function calculateHealthReport(e){
+  e.preventDefault();
+  const age=parseFloat(document.getElementById('h-age').value);
+  const gender=document.getElementById('h-gender').value;
+  const height=parseFloat(document.getElementById('h-height').value);
+  const weight=parseFloat(document.getElementById('h-weight').value);
+  const screenTime=parseFloat(document.getElementById('h-screen').value);
+  const water=parseFloat(document.getElementById('h-water').value);
+  const sleep=parseFloat(document.getElementById('h-sleep').value);
+  const activity=document.getElementById('h-activity').value;
+  const goal=document.getElementById('h-goal').value;
+
+  const hM=height/100;
+  const bmi=(weight/(hM*hM)).toFixed(1);
+  let bmiStatus="Normal Weight";
+  if(bmi<18.5) bmiStatus="Underweight"; else if(bmi>=25 && bmi<29.9) bmiStatus="Overweight"; else if(bmi>=30) bmiStatus="Obese";
+  document.getElementById('r-bmi').innerText=bmi;
+  document.getElementById('r-bmi-status').innerText=bmiStatus;
+
+  let index=100;
+  if(bmi<18.5||bmi>27) index-=12;
+  if(screenTime>8) index-=15; else if(screenTime>6) index-=8;
+  if(water<2.0) index-=10;
+  if(sleep<6||sleep>9) index-=12;
+  if(activity==='sedentary') index-=10;
+  index=Math.max(35,Math.min(98,index));
+  document.getElementById('r-health-index').innerText=`${index}/100`;
+
+  let bmr = gender==='male' ? (10*weight+6.25*height-5*age+5)
+    : gender==='female' ? (10*weight+6.25*height-5*age-161)
+    : (10*weight+6.25*height-5*age-78);
+  const actMult = {sedentary:1.2, light:1.375, moderate:1.55, active:1.725}[activity];
+  let tdee = bmr*actMult;
+  if(goal==='weight_loss') tdee -= 500; else if(goal==='energy') tdee += 100;
+  document.getElementById('r-calories').innerText=`${Math.round(tdee)} kcal`;
+  const waterTarget=Math.max(2.0,(weight*0.035)).toFixed(1);
+  document.getElementById('r-water-target').innerText=`${waterTarget} L`;
+
+  document.getElementById('diet-recommendations').innerHTML=`
+    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100"><strong class="text-emerald-800">Breakfast (8:00 AM):</strong> Oats with chia seeds, berries & 2 boiled eggs / sprouted lentils 🥣</div>
+    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100"><strong class="text-emerald-800">Lunch (1:00 PM):</strong> Brown rice/quinoa, fiber-rich salad, grilled chicken or paneer/tofu 🥗</div>
+    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100"><strong class="text-emerald-800">Snack (4:30 PM):</strong> Roasted walnuts & unsweetened green tea 🍵</div>
+    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100"><strong class="text-emerald-800">Dinner (7:45 PM):</strong> Warm vegetable broth, steamed veggies & lean protein 🍲</div>`;
+
+  document.getElementById('schedule-recommendations').innerHTML=`
+    <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100"><strong class="text-indigo-800">06:45 AM — Morning Sunlight:</strong> 15 min outdoor walk to anchor circadian rhythm ☀️</div>
+    <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100"><strong class="text-indigo-800">02:30 PM — Posture & Hydration:</strong> 5-min desk stretch, a glass of water 💧</div>
+    <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100"><strong class="text-indigo-800">06:00 PM — Movement Block:</strong> 35-45 min cardio or strength training 🏋️</div>
+    <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100"><strong class="text-indigo-800">10:00 PM — Digital Sunset:</strong> Screens off 45 min before bed to trigger melatonin 😴</div>`;
+
+  document.getElementById('screentime-advice').innerHTML=`
+    <p>Daily digital exposure recorded at <strong>${screenTime} hours</strong>. Apply the <strong>20-20-20 rule</strong> (every 20 min, look 20 feet away for 20 seconds).</p>
+    <p>Pair this with at least <strong>${waterTarget}L of water daily</strong> to maintain focus and reduce optical fatigue.</p>
+    ${goal==='posture' ? '<p>Set your screen top edge at eye level and take a 5-minute walk every 90 minutes to relieve neck and back strain.</p>' : ''}
+    ${bmiStatus!=='Normal Weight' ? `<p>Your BMI category is <strong>${bmiStatus}</strong> — pair the diet plan above with your target of ~<strong>${Math.round(tdee)} kcal/day</strong>.</p>` : ''}`;
+
+  const prevHist=loadHistory('health');
+  const vsPrev=document.getElementById('health-vs-previous');
+  if(prevHist.length){
+    const diff=index-prevHist[prevHist.length-1].score;
+    vsPrev.innerHTML = diff===0 ? `<span class="text-slate-500">Same health score as last time</span>`
+      : `<span class="${diff>0?'text-emerald-600':'text-rose-600'}">${diff>0?'▲':'▼'} ${Math.abs(diff)} points vs your last check</span>`;
+  } else { vsPrev.innerHTML=''; }
+
+  saveHistory('health',{date:nowLabel(),score:index,bmi,bmiStatus,calories:Math.round(tdee),water:waterTarget});
+  showSection('health-result-section');
+}
+
+/* ---------- STRESS ---------- */
+function calculateStress(e){
+  e.preventDefault();
+  const hours=parseFloat(document.getElementById('s-hours').value);
+  const pressure=parseFloat(document.getElementById('s-pressure').value);
+  const fatigue=document.getElementById('s-fatigue').value;
+  const breaks=document.getElementById('s-breaks').value;
+  const fatigueMap={rarely:0,sometimes:10,often:20,constantly:30};
+  const breaksMap={regular:0,few:8,none:15};
+  let score = pressure*6 + (hours>9?15:hours>7?8:0) + fatigueMap[fatigue] + breaksMap[breaks];
+  score=Math.max(5,Math.min(98,Math.round(score)));
+  let tier="Low Burnout Risk 🌿";
+  if(score>75) tier="Severe Burnout Risk 🔴"; else if(score>55) tier="High Burnout Risk 🟠"; else if(score>30) tier="Moderate Burnout Risk 🟡";
+  document.getElementById('stress-score-display').innerText=`${score}/100`;
+  document.getElementById('stress-tier-display').innerText=tier;
+  const tips=document.getElementById('stress-tips');
+  tips.innerHTML='';
+  const tipList=[
+    "Schedule two 10-minute screen-free breaks between meetings.",
+    "Try box breathing (4s in, 4s hold, 4s out, 4s hold) before high-pressure tasks.",
+    "Protect one non-negotiable wind-down hour before bed.",
+    "If workload consistently exceeds 9 hrs/day, flag capacity concerns to your manager."
+  ];
+  tipList.forEach(t=>{ tips.innerHTML+=`<div class="p-2.5 bg-amber-50 rounded-lg border border-amber-100">• ${t}</div>`; });
+
+  const prevHist=loadHistory('stress');
+  const vsPrev=document.getElementById('stress-vs-previous');
+  if(prevHist.length){
+    const diff=score-prevHist[prevHist.length-1].score;
+    const improved = diff<0;
+    vsPrev.innerHTML = diff===0 ? `<span class="text-slate-500">Same burnout score as last time</span>`
+      : `<span class="${improved?'text-emerald-600':'text-rose-600'}">${diff>0?'▲':'▼'} ${Math.abs(diff)} points vs your last check</span>`;
+  } else { vsPrev.innerHTML=''; }
+
+  saveHistory('stress',{date:nowLabel(),score,tier});
+  showSection('stress-result-section');
+}
+
+/* ---------- SLEEP ---------- */
+function calculateSleep(e){
+  e.preventDefault();
+  const consistency=document.getElementById('sl-consistency').value;
+  const caffeine=parseFloat(document.getElementById('sl-caffeine').value);
+  const screen=document.getElementById('sl-screen').value;
+  const morning=document.getElementById('sl-morning').value;
+  let score=100;
+  score -= {consistent:0,somewhat:10,irregular:22}[consistency];
+  score -= Math.min(20, caffeine*4);
+  score -= {none:0,short:5,medium:12,long:20}[screen];
+  score -= {refreshed:0,okay:8,tired:16,exhausted:26}[morning];
+  score=Math.max(20,Math.min(98,Math.round(score)));
+  let tier="Excellent Recovery 🌟";
+  if(score<45) tier="Poor Recovery 🔴"; else if(score<65) tier="Fair Recovery 🟡"; else if(score<80) tier="Good Recovery 🟢";
+  document.getElementById('sleep-score-display').innerText=`${score}/100`;
+  document.getElementById('sleep-tier-display').innerText=tier;
+  const tips=document.getElementById('sleep-tips');
+  tips.innerHTML='';
+  const tipList=[
+    "Keep bedtime and wake time within a consistent 30-minute window, even on weekends.",
+    "Avoid caffeine after 2 PM — it has a half-life of ~5-6 hours.",
+    "Dim screens and switch to warm light 45-60 minutes before bed.",
+    "A cool, dark, quiet room supports deeper melatonin-driven sleep."
+  ];
+  tipList.forEach(t=>{ tips.innerHTML+=`<div class="p-2.5 bg-purple-50 rounded-lg border border-purple-100">• ${t}</div>`; });
+
+  const prevHist=loadHistory('sleep');
+  const vsPrev=document.getElementById('sleep-vs-previous');
+  if(prevHist.length){
+    const diff=score-prevHist[prevHist.length-1].score;
+    vsPrev.innerHTML = diff===0 ? `<span class="text-slate-500">Same sleep score as last time</span>`
+      : `<span class="${diff>0?'text-emerald-600':'text-rose-600'}">${diff>0?'▲':'▼'} ${Math.abs(diff)} points vs your last check</span>`;
+  } else { vsPrev.innerHTML=''; }
+
+  saveHistory('sleep',{date:nowLabel(),score,tier});
+  showSection('sleep-result-section');
+}
+
+/* ---------- share ---------- */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.innerText=msg;
+  t.classList.remove('opacity-0');
+  t.classList.add('opacity-100');
+  clearTimeout(window._toastTimer);
+  window._toastTimer=setTimeout(()=>{ t.classList.remove('opacity-100'); t.classList.add('opacity-0'); },2500);
+}
+async function shareApp(){
+  const shareData={
+    title:'Know Yourself',
+    text:'Test your IQ, health index, stress and sleep score on Know Yourself 🧠🩺 — try it out!',
+    url:window.location.href
+  };
+  try{
+    if(navigator.share){
+      await navigator.share(shareData);
+      return;
+    }
+  }catch(err){ /* user cancelled or share failed, fall through to copy */ }
+  try{
+    await navigator.clipboard.writeText(window.location.href);
+    showToast('Link copied! Paste it to share 🔗');
+  }catch(err){
+    showToast('Copy this link: '+window.location.href);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadDashboardStats);
+</script>
+</body>
+</html>
